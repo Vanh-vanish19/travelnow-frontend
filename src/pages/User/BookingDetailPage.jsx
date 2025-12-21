@@ -218,6 +218,11 @@ const BookingDetailPage = () => {
         { label: 'Thuế 8%', value: pricing.tax || 0 }
       ];
   const totalAmount = pricing.total ?? payment.total ?? 0;
+  const mapsUrl = (() => {
+    const parts = [hotelInfo.name, hotelInfo.address, hotelInfo.city].filter(Boolean);
+    if (parts.length === 0) return '';
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(parts.join(' '))}`;
+  })();
 
   const handleCopyCode = async () => {
     try {
@@ -370,7 +375,7 @@ const BookingDetailPage = () => {
                 <button
                   type="button"
                   onClick={handleCopyCode}
-                  className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 hover:text-primary"
+                  className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 hover:text-primary focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 >
                   <Copy className="h-3.5 w-3.5" />
                   Sao chép
@@ -383,7 +388,7 @@ const BookingDetailPage = () => {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 onClick={handleDownloadTicket}
                 disabled={isGeneratingTicket}
               >
@@ -394,7 +399,7 @@ const BookingDetailPage = () => {
                 <Button
                   variant="outline"
                   onClick={handleOpenCancelModal}
-                  className="flex items-center gap-2 text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
+                  className="flex items-center gap-2 border-red-500 bg-red-500 text-white hover:bg-red-600 hover:border-red-600 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 >
                   Hủy phòng
                 </Button>
@@ -448,7 +453,18 @@ const BookingDetailPage = () => {
                     )}
                     <div className="mt-2 flex items-start gap-2 text-sm text-gray-500">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                      <span>{hotelInfo.address || 'Địa chỉ đang cập nhật'}</span>
+                      {mapsUrl ? (
+                        <a
+                          href={mapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          {hotelInfo.address || 'Xem trên bản đồ'}
+                        </a>
+                      ) : (
+                        <span>{hotelInfo.address || 'Địa chỉ đang cập nhật'}</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -457,7 +473,15 @@ const BookingDetailPage = () => {
                     <Phone className="w-4 h-4" />
                     Gọi khách sạn
                   </Button>
-                  <Button variant="outline" className="w-full justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center gap-2 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+                    onClick={() => {
+                      if (!mapsUrl) return;
+                      window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+                    }}
+                    disabled={!mapsUrl}
+                  >
                     <MapPin className="w-4 h-4" />
                     Chỉ đường
                   </Button>
