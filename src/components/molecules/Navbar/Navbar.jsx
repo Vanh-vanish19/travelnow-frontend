@@ -43,9 +43,7 @@ const NavBar = () => {
         <div className="flex items-center justify-between rounded-full bg-white px-5 py-2 shadow-sm">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/90 text-white shadow-sm">
-              <span className="text-base font-bold">T</span>
-            </div>
+            <img src="/logo.png" alt="TravelNow Logo" className="h-12 w-12 object-contain" />
             <span className="text-sm font-semibold tracking-tight text-slate-900">
               TravelNow
             </span>

@@ -15,7 +15,8 @@ const AdminHotelEditPage = () => {
     description: '',
     pricePerNight: '',
     imageUrl: '',
-    amenities: ''
+    amenities: '',
+    virtualTourUrl: ''
   });
   const [rooms, setRooms] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -41,7 +42,8 @@ const AdminHotelEditPage = () => {
           description: hotel.description || '',
           pricePerNight: hotel.pricePerNight != null ? String(hotel.pricePerNight) : '',
           imageUrl: hotel.imageUrl || '',
-          amenities: Array.isArray(hotel.amenities) ? hotel.amenities.join(', ') : ''
+          amenities: Array.isArray(hotel.amenities) ? hotel.amenities.join(', ') : '',
+          virtualTourUrl: hotel.virtualTourUrl || ''
         });
 
         const urls = Array.isArray(hotel.imageUrls)
@@ -96,7 +98,7 @@ const AdminHotelEditPage = () => {
     setRooms((prev) => [
       ...prev,
       {
-        id: undefined,
+        id: `room-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         name: '',
         pricePerNight: '',
         maxGuests: '',
@@ -151,12 +153,14 @@ const AdminHotelEditPage = () => {
         description: form.description,
         pricePerNight: Number(form.pricePerNight) || 0,
         imageUrl: form.imageUrl,
+        virtualTourUrl: form.virtualTourUrl,
         amenities: form.amenities
           ? form.amenities.split(',').map((a) => a.trim()).filter(Boolean)
           : [],
         imageUrls: existingImages,
         imageDataUrls: newImagePreviews,
-        roomTypes: rooms.map((room) => ({
+        roomTypes: rooms.map((room, index) => ({
+          id: room.id || room._id || `room-${index}-${Date.now()}`,
           name: room.name,
           pricePerNight: Number(room.pricePerNight) || 0,
           maxGuests: room.maxGuests ? Number(room.maxGuests) : undefined,
@@ -205,6 +209,19 @@ const AdminHotelEditPage = () => {
               className="w-full border rounded px-2 py-1 text-sm"
               required
             />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Link 3D Tour (Matterport iframe URL)
+            </label>
+            <input
+              name="virtualTourUrl"
+              value={form.virtualTourUrl}
+              onChange={handleChange}
+              className="w-full border rounded px-2 py-1 text-sm"
+              placeholder="https://my.matterport.com/show/?m=...&play=1"
+            />
+            <p className="mt-1 text-xs text-gray-500">Dán URL nhúng (allow embed). Không cần thẻ iframe.</p>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">

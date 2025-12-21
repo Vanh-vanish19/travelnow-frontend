@@ -7,9 +7,7 @@ const Footer = () => {
       <div className="app-container grid gap-10 py-10 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-              <span className="text-sm font-bold">T</span>
-            </div>
+            <img src="/logo.png" alt="TravelNow Logo" className="h-12 w-12 object-contain" />
             <span className="text-base font-semibold text-slate-900">
               TravelNow
             </span>
