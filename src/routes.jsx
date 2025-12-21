@@ -14,6 +14,14 @@ import MyBookingsPage from './pages/User/MyBookingsPage';
 import BookingDetailPage from './pages/User/BookingDetailPage';
 import PromotionsPage from './pages/Promotions/PromotionsPage';
 import { useAuth } from './context/AuthContext';
+import AdminLayout from './layouts/AdminLayout/AdminLayout';
+import AdminDashboardPage from './pages/Admin/AdminDashboardPage';
+import AdminUsersPage from './pages/Admin/AdminUsersPage';
+import AdminHotelsPage from './pages/Admin/AdminHotelsPage';
+import AdminHotelDetailPage from './pages/Admin/AdminHotelDetailPage';
+import AdminHotelEditPage from './pages/Admin/AdminHotelEditPage';
+import AdminVouchersPage from './pages/Admin/AdminVouchersPage';
+import AdminBookingsPage from './pages/Admin/AdminBookingsPage';
 
 const RequireAuth = ({ children }) => {
   const { user, loading } = useAuth();
@@ -21,6 +29,22 @@ const RequireAuth = ({ children }) => {
   if (loading) return null;
 
   if (!user) {
+    return <Navigate to="/user/login" replace />;
+  }
+
+  return children;
+};
+
+const RequireRoles = ({ roles, children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+
+  if (!user) {
+    return <Navigate to="/user/login" replace />;
+  }
+
+  if (roles && !roles.includes(user.role)) {
     return <Navigate to="/user/login" replace />;
   }
 
@@ -77,6 +101,29 @@ const RoutesConfig = () => {
             </RequireAuth>
           )}
         />
+      </Route>
+      <Route
+        path="/admin"
+        element={(
+          <RequireRoles roles={["superadmin", "admin", "manager", "staff"]}>
+            <AdminLayout />
+          </RequireRoles>
+        )}
+      >
+        <Route index element={<AdminDashboardPage />} />
+        <Route
+          path="users"
+          element={(
+            <RequireRoles roles={["superadmin", "admin"]}>
+              <AdminUsersPage />
+            </RequireRoles>
+          )}
+        />
+        <Route path="hotels" element={<AdminHotelsPage />} />
+        <Route path="hotels/:id" element={<AdminHotelDetailPage />} />
+        <Route path="hotels/:id/edit" element={<AdminHotelEditPage />} />
+        <Route path="vouchers" element={<AdminVouchersPage />} />
+        <Route path="bookings" element={<AdminBookingsPage />} />
       </Route>
     </Routes>
   );

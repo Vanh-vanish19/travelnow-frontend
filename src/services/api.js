@@ -49,4 +49,8 @@ export function put(path, body, options = {}) {
   return request(path, { ...options, method: 'PUT', body });
 }
 
+export function del(path, options = {}) {
+  return request(path, { ...options, method: 'DELETE' });
+}
+
 export { API_BASE_URL };

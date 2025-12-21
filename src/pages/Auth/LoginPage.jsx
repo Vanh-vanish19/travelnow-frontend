@@ -39,7 +39,9 @@ const LoginPage = () => {
         }
 
         toast.success('Đăng nhập thành công');
-        if (redirectTo) {
+        if (['admin', 'superadmin', 'manager', 'staff'].includes(data?.user?.role)) {
+          navigate('/admin', { replace: true });
+        } else if (redirectTo) {
           navigate(redirectTo, { replace: true, state: bookingPayload });
         } else {
           navigate('/');
